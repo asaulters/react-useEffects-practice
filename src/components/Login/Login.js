@@ -6,7 +6,6 @@ import Button from '../UI/Button/Button';
 
 const emailReducer = (state, action) => {
   if(action.type === 'USER_INPUT'){
-    console.log('user input!')
     return{value: action.val, isValid:action.val.includes('@') }
   }
   if(action.type === 'INPUT_BLUR'){
@@ -18,13 +17,11 @@ const emailReducer = (state, action) => {
 
 const passwordReducer = (state, action) => {
   if (action.type === 'USER_INPUT'){
-    console.log('user input!')
-    return {value:action.val, isValid : action.val.length > 6}
+    return {value:action.val, isValid: action.val.trim().length > 6}
 
   }
   if (action.type === ' INPUT_BLUR') {
-    console.log('blur')
-    return {value: state.value, isValid: action.value.length > 6}
+    return {value: state.value, isValid: action.value.trim().length > 6}
   } 
   
     console.log('not valid')
@@ -50,20 +47,23 @@ const Login = (props) => {
     isValid: null
   })
 
-  // useEffect(() => {
-  //   const identifier = setTimeout(() =>{
-  //     console.log('checking form validity');
-  //     setFormIsValid(
-  //       enteredEmail.includes('@') && enteredPassword.trim().length > 6
-  //     );
-  //   }, 500);
+  const { isValid: emailIsValid} = emailState;
+  const { isValid: passwordIsValid} = passwordState
+
+  useEffect(() => {
+    const identifier = setTimeout(() =>{
+      console.log('checking form validity');
+      setFormIsValid(
+        emailIsValid && passwordIsValid
+      );
+    }, 500);
 
 
-  //   return() => {
-  //     console.log("Cleanup!");
-  //     clearTimeout(identifier)
-  //   };
-  // }, [setFormIsValid, enteredEmail, enteredPassword]) ;
+    return() => {
+      console.log("Cleanup!");
+      clearTimeout(identifier)
+    };
+  }, [setFormIsValid, emailIsValid, passwordIsValid]) ;
 
   const emailChangeHandler = (event) => {
     dispatchEmail({type: 'USER_INPUT', val: event.target.value});
